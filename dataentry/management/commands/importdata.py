@@ -2,6 +2,7 @@ from django.core.management.base import BaseCommand, CommandError
 # from dataentry.models import Student
 from django.apps import apps
 import csv
+from django.db import DataError
 
 # Proposed command - python manage.py importdata file_path model_name
 # Sample dataset available at https://www.kaggle.com/datasets
@@ -44,9 +45,19 @@ class Command(BaseCommand):
 
         if not model:
             raise CommandError(f"Model {model_name} was not found in any app!")
+        
+        # compare csv header with model's field names
+        # get all the field names of the model that we found
+        model_fields = [field.name for field in model._meta.fields if field.name != "id"]
 
         with open(file_path, "r") as file: # !!!important!!! use [with] for properly closing the file
-            reader = csv.DictReader(file)
+            reader = csv.DictReader(file) # csv.DictReader considers the 1st row as the header row
+            csv_header = reader.fieldnames
+
+            # compare csv header with model's field names
+            if csv_header != model_fields:
+                raise DataError(f"CSV file doesn't match with the {model_name} table fields.")
+
             for row in reader:
                 model.objects.create(**row) # equiavlent to roll_no=data["roll_no"] etc...
         self.stdout.write(self.style.SUCCESS("Data inserted successfully!"))

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Import Data</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+</head>
+<body>
+  <div class="container mt-5">
+    <h3 class="text-center">Import Data To Database</h3>
+    <form action="{% url 'import_data' %}" method="POST" enctype="multipart/form-data" style="max-width: 600px;margin: auto; padding-top: 50px;">
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="file_path">Upload CSV File</label>
+        <input type="file" name="file_path" id="file_path" class="form-control" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="model_name">Select Database Table</label>
+        <select name="model_name" id="model_name" class="form-control" required>
+          <option value="" disabled selected>Select</option>
+          {% for model in custom_models %}
+            <option value="{{model}}">{{model}}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <input type="submit" value="Import Data" class="btn btn-primary">
+      
+      {% include "alerts.html" %}
+    </form>
+
+  </div>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+</body>
+</html>
