@@ -16,6 +16,13 @@
       .form-group {
         padding: 15px !important;
       }
+      .home-info {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 20px;
+      }
     </style>
 
   </head>
@@ -23,9 +30,16 @@
   <nav class="navbar bg-body-tertiary">
     <div class="container">
       <a class="navbar-brand" href="{% url 'home' %}">Automate With Django</a>
+      {% if user.is_authenticated %}
       <div>
-        <a href="" class="float-right text-decoration-none text-dark">Login</a>
-        &nbsp;<a href="" class="float-right btn btn-success">Register</a>
+        Logged in as <b>{{user}}</b>
+        &nbsp;<a href="{% url 'logout' %}" class="float-right btn btn-outline-danger">Logout</a>
+      </div>
+      {% else %}
+      <div>
+        <a href="{% url 'login' %}" class="float-right text-decoration-none text-dark">Login</a>
+        &nbsp;<a href="{% url 'register' %}" class="float-right btn btn-success">Register</a>
+      {% endif %}
       </div>
 
     </div>

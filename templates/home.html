@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container" style="padding: 50px;">
+    {% if user.is_authenticated %}
     <h2 class="text-center">Automate The Boring Stuff With Django</h2>
     <div class="row pt-5">
         <!-- Import data -->
@@ -88,4 +89,18 @@
             </a>
         </div>
     </div>
-</div>{% endblock %}
+    {% else %}
+    <div class="home-info">
+        <h2 class="text-center">Automate the Boring Stuff with Django</h2>
+        <p class="lead text-center text-muted">
+            Embark on a transformative journey with 'Automate the Boring Stuff with Django' – an immersive Python and Django course tailored for efficiency enthusiasts! Say goodbye to boring, time-consuming tasks, and delve into the world of Django to construct not just one or two, 
+            but six essential automation tools that will redefine your workflow. 
+        </p>
+        <div style="display: flex; justify-content: center;">
+            <a href="{% url 'login' %}" class="btn btn-primary">LOGIN</a>
+            &nbsp;<a href="{% url 'register' %}" class="btn btn-success">REGISTER</a>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
