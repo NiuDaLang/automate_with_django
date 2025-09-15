@@ -1,22 +1,91 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Automate The Boring Stuff With Django</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-  </head>
-  <body>
-    <div class="container">
-      <h3 class="text-center">Home Page</h3>
-      <br/>
-      <a href="{% url 'import_data' %}">Import Data</a>
-      <br/>
-      <a href="{% url 'export_data' %}">Export Data</a>
+{% extends "base.html" %}
+{% block content %}
+<div class="container" style="padding: 50px;">
+    <h2 class="text-center">Automate The Boring Stuff With Django</h2>
+    <div class="row pt-5">
+        <!-- Import data -->
+        <div class="col-md-4">
+            <a href="{% url 'import_data' %}" class="text-decoration-none text-dark">
+                <div class="card bg-primary-subtle text-primary shadow">
+                    <div class="card-header">
+                      <h4>Import Data</h4>
+                    </div>
+                    <div class="card-body">
+                      <p class="card-text">Imports data from CSV file to any table.</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <!-- Export Data -->
+        <div class="col-md-4">
+            <a href="{% url 'export_data' %}" class="text-decoration-none text-dark">
+                <div class="card bg-success-subtle text-success shadow">
+                    <div class="card-header">
+                    <h4>Export Data</h4>
+                    </div>
+                    <div class="card-body">
+                    <p class="card-text">Exports data from a specific table to a CSV file.</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <!-- Bulk Emails -->
+        <div class="col-md-4">
+            <a href="#" class="text-decoration-none text-dark">
+                <div class="card bg-danger-subtle text-danger shadow">
+                    <div class="card-header">
+                    <h4>Bulk Emails</h4>
+                    </div>
+                    <div class="card-body">
+                    <p class="card-text">Sends bulk emails to users</p>
+                    </div>
+                </div>
+            </a>
+        </div>
     </div>
-    
 
+    <div class="row pt-5">
+        <!-- Email Tracking -->
+        <div class="col-md-4">
+            <a href="#" class="text-decoration-none text-dark">
+                <div class="card bg-warning-subtle text-warning shadow">
+                    <div class="card-header">
+                    <h4>Email Tracking</h4>
+                    </div>
+                    <div class="card-body">
+                    <p class="card-text">Tracks emails and shows open and click rate</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        
+     <!-- Compress Images -->
+        <div class="col-md-4">
+            <a href="#" class="text-decoration-none text-dark">
+                <div class="card bg-danger-subtle text-danger shadow">
+                    <div class="card-header">
+                    <h4>Compress Images</h4>
+                    </div>
+                    <div class="card-body">
+                    <p class="card-text">Compresses Image files and reduces the size</p>
+                    </div>
+                </div>
+            </a>
+        </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
-  </body>
-</html>
+     <!-- Web Scraping -->
+        <div class="col-md-4">
+            <a href="#" class="text-decoration-none text-dark">
+                <div class="card bg-warning-subtle text-warning shadow">
+                    <div class="card-header">
+                    <h4>Web Scraping</h4>
+                    </div>
+                    <div class="card-body">
+                    <p class="card-text">Scrapes websites for useful information</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>{% endblock %}
