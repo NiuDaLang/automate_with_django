@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     "uploads",
     "crispy_forms",
     "crispy_bootstrap5",
+    "emails",
+    'django_ckeditor_5',
 ]
 
 MIDDLEWARE = [
@@ -134,6 +136,8 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR /"media"
 
+from .ckeditorconfig import *
+
 from django.contrib.messages import constants as messages
 MESSAGE_TAGS = {
     messages.ERROR: "danger",
@@ -154,3 +158,18 @@ DEFAULT_TO_EMAIL = config('DEFAULT_TO_EMAIL')
 
 # Form
 CRISPY_TEMPLATE_PACK = config('CRISPY_TEMPLATE_PACK')
+
+
+
+# # Define the path where CKEditor uploads should go
+# class CustomStorage(FileSystemStorage):
+#     """Custom storage for django_ckeditor_5 images."""
+
+#     location = os.path.join(MEDIA_ROOT, "ckeditor5_storage")
+#     base_url = urljoin(MEDIA_URL, "ckeditor5_storage/")
+
+#     def __str__(self):
+#         print(self.location, self.base_url)
+#         return self.location
+
+# CKEDITOR_5_FILE_STORAGE = "awd_main.settings.CustomStorage" # optional
