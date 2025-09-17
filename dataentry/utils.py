@@ -1,11 +1,15 @@
 from django.apps import apps
+import hashlib
+import time
 from django.core.management.base import CommandError
 from django.db import DataError
 import csv
 from django.conf import settings
 import datetime
 import os
-from django.core.mail import EmailMultiAlternatives, EmailMessage
+from django.core.mail import EmailMultiAlternatives
+from emails.models import Email, Sent, EmailTracking, Subscriber
+from bs4 import BeautifulSoup
 
 
 def get_all_custom_models():
@@ -79,19 +83,64 @@ def check_csv_errors(file_path, model_name):
 
 
 # EmailMultiAlternatives version
-def send_email_notification(mail_subject, text, to_email, attachment=None, html=None):
+def send_email_notification(mail_subject, text, to_email, email_id=None, attachment=None, html=None):
     try:
-        mail = EmailMultiAlternatives(
-                subject = mail_subject, 
-                body = text, 
-                from_email = settings.DEFAULT_FROM_EMAIL, 
-                to = to_email
-            )
-        if attachment is not None:
-            mail.attach_file(attachment)
-        if html is not None:
-            mail.attach_alternative(html, "text/html")
-        mail.send()
+        from_email = settings.DEFAULT_FROM_EMAIL
+
+        for recipient_email in to_email:
+            new_message = html
+            # Create EmailTracking record
+            if email_id: # run this code only during bulk email sending
+                email = Email.objects.get(pk=email_id)
+                subscriber = Subscriber.objects.get(email_list=email.email_list, email_address=recipient_email)
+                timestamp = str(time.time())
+                data_to_hash = f"{recipient_email}{timestamp}"
+                unique_id = hashlib.sha256(data_to_hash.encode()).hexdigest()
+                email_tracking = EmailTracking.objects.create(
+                    email = email,
+                    subscriber = subscriber,
+                    unique_id = unique_id,
+                )
+
+                base_url = settings.BASE_URL
+                # Generate the tracking pixel
+                click_tracking_url = f"{base_url}/emails/track/click/{unique_id}"
+                open_tracking_url = f"{base_url}/emails/track/open/{unique_id}"
+
+                # Search for the links in the email body
+                soup = BeautifulSoup(html, "html.parser")
+                urls = [a["href"] for a in soup.find_all("a", href=True)]
+
+                # If there are links or urls in the email body, inject our click tracking url to that original link
+                if urls:
+                    for url in urls:
+                        # make the final tracking url
+                        tracking_url = f"{click_tracking_url}?url={url}"
+                        new_message = new_message.replace(f"{url}", f"{tracking_url}")
+
+                # Create the email content with tracking pixel image
+                open_tracking_img = f"<img src='{open_tracking_url}' width='1' height='1'>"
+                new_message += open_tracking_img
+
+            mail = EmailMultiAlternatives(
+                    subject = mail_subject, 
+                    body = text, 
+                    from_email = from_email, 
+                    to = [recipient_email],
+                )
+            if attachment is not None:
+                mail.attach_file(attachment)
+            if html is not None:
+                mail.attach_alternative(new_message, "text/html")
+            mail.send()
+
+        # Store the total sent emails inside the Sent model
+        if email_id:
+            sent = Sent()
+            sent.email = email
+            sent.total_sent = email.email_list.count_emails() # count happens when email sending occurs
+            sent.save()
+
     except Exception as e:
         raise e
 

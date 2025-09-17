@@ -26,7 +26,7 @@ SECRET_KEY = config("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config("DEBUG", default=False, cast=bool) # True of False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     "crispy_forms",
     "crispy_bootstrap5",
     "emails",
-    'django_ckeditor_5',
+    "django_ckeditor_5",
+    "anymail",
 ]
 
 MIDDLEWARE = [
@@ -147,29 +148,25 @@ MESSAGE_TAGS = {
 CELERY_BROKER_URL = "redis://localhost:6379"
 
 # Email Configuration
-EMAIL_HOST = config('EMAIL_HOST')
-EMAIL_PORT = config('EMAIL_PORT', cast=int)
-EMAIL_HOST_USER = config('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
-EMAIL_USE_TLS = True
-EMAIL_USE_SSL = False
-DEFAULT_FROM_EMAIL = 'Automate with Django <pqnnqp@gmail.com>'
+# EMAIL_HOST = config('EMAIL_HOST')
+# EMAIL_PORT = config('EMAIL_PORT', cast=int)
+# EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+# EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+# EMAIL_USE_TLS = True
+# EMAIL_USE_SSL = False
+# DEFAULT_FROM_EMAIL = 'Automate with Django <pqnnqp@gmail.com>'
 DEFAULT_TO_EMAIL = config('DEFAULT_TO_EMAIL')
 
 # Form
 CRISPY_TEMPLATE_PACK = config('CRISPY_TEMPLATE_PACK')
 
+# Bulk Email
+EMAIL_BACKEND = "anymail.backends.brevo.EmailBackend"
 
+ANYMAIL = {
+    "BREVO_API_KEY": config('BREVO_API_KEY')
+}
+DEFAULT_FROM_EMAIL = "Automate with Django <50gogo@bgben.net>"  # Your verified custom domain email
 
-# # Define the path where CKEditor uploads should go
-# class CustomStorage(FileSystemStorage):
-#     """Custom storage for django_ckeditor_5 images."""
-
-#     location = os.path.join(MEDIA_ROOT, "ckeditor5_storage")
-#     base_url = urljoin(MEDIA_URL, "ckeditor5_storage/")
-
-#     def __str__(self):
-#         print(self.location, self.base_url)
-#         return self.location
-
-# CKEDITOR_5_FILE_STORAGE = "awd_main.settings.CustomStorage" # optional
+CSRF_TRUSTED_ORIGINS = ["https://98965be363c7.ngrok-free.app"]
+BASE_URL = "https://98965be363c7.ngrok-free.app"
