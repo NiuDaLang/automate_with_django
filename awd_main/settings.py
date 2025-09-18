@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     "emails",
     "django_ckeditor_5",
     "anymail",
+    "image_compression",
 ]
 
 MIDDLEWARE = [
